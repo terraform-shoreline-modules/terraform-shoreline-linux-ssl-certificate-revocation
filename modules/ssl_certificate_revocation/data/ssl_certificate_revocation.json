@@ -1,0 +1,194 @@
+{
+  "name": "ssl_certificate_revocation",
+  "description": "An SSL Certificate Revocation incident refers to an event where the SSL certificate for a particular instance is found to be revoked or invalid. This can cause security issues and disrupt the availability of the service, as clients may not be able to establish a secure connection with the instance. Resolving this incident typically involves renewing or replacing the SSL certificate for the affected instance.",
+  "params": [
+    {
+      "name": "NAME_OF_SSL_CERTIFICATE_AUTHORITY",
+      "value": ""
+    },
+    {
+      "name": "INSTANCE",
+      "value": ""
+    },
+    {
+      "name": "CERTIFICATE_NAME",
+      "value": ""
+    },
+    {
+      "name": "CERTIFICATE_FILE",
+      "value": ""
+    },
+    {
+      "name": "PATH_TO_CA_BUNDLE_FILE",
+      "value": ""
+    },
+    {
+      "name": "PORT",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## SSL Certificate Revocation\nAn SSL Certificate Revocation incident refers to an event where the SSL certificate for a particular instance is found to be revoked or invalid. This can cause security issues and disrupt the availability of the service, as clients may not be able to establish a secure connection with the instance. Resolving this incident typically involves renewing or replacing the SSL certificate for the affected instance."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL certificate status of an instance"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl s_client -connect ${INSTANCE}:${PORT} -tls1_2`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL certificate validity period"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl x509 -in ${CERTIFICATE_FILE} -noout -dates`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL certificate issuer"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl x509 -in ${CERTIFICATE_FILE} -noout -issuer`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL certificate subject"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl x509 -in ${CERTIFICATE_FILE} -noout -subject`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL certificate chain"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl s_client -connect ${INSTANCE}:${PORT} -tls1_2 -showcerts`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL/TLS protocol version"
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl s_client -connect ${INSTANCE}:${PORT} -tls1_2 -msg`"
+    },
+    {
+      "name": "cell_14",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL/TLS handshake process"
+    },
+    {
+      "name": "cell_15",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl s_client -connect ${INSTANCE}:${PORT} -tls1_2 -state -debug`"
+    },
+    {
+      "name": "cell_16",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL/TLS cipher suite"
+    },
+    {
+      "name": "cell_17",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl s_client -connect ${INSTANCE}:${PORT} -tls1_2 -cipher`"
+    },
+    {
+      "name": "cell_18",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the SSL/TLS certificate revocation status"
+    },
+    {
+      "name": "cell_19",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl s_client -connect ${INSTANCE}:${PORT} -tls1_2 -crlf -status`"
+    },
+    {
+      "name": "cell_20",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## The SSL certificate for the instance expired and was not renewed in a timely manner."
+    },
+    {
+      "name": "cell_21",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_check_cert_expiry($INSTANCE, $CERTIFICATE_FILE)"
+    },
+    {
+      "name": "cell_22",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## The SSL certificate was issued by an untrusted or compromised certificate authority."
+    },
+    {
+      "name": "cell_23",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_check_certificate($NAME_OF_SSL_CERTIFICATE_AUTHORITY, $INSTANCE, $CERTIFICATE_FILE, $PATH_TO_CA_BUNDLE_FILE)"
+    },
+    {
+      "name": "cell_24",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Renew the SSL certificate: The first step to resolving an SSL certificate revocation incident is to renew the certificate. This typically involves generating a new certificate signing request (CSR), submitting it to a certificate authority (CA), and then installing the new certificate on the affected instance."
+    },
+    {
+      "name": "cell_25",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_renew_certificate($CERTIFICATE_NAME)"
+    }
+  ]
+}
